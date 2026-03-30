@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Quiet Space | Portfolio</title>
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Inter:wght@200;300&family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #fdfaf6; /* Aged Paper */
+            --ink-black: #2c2c2c;
+            --dusty-rose: #c89d9c;
+            --muted-sage: #8b9a78;
+            --paper-shadow: rgba(0, 0, 0, 0.05);
+            --transition-soft: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--ink-black);
+            font-family: 'Inter', sans-serif;
+            font-weight: 200;
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="rgba(200, 157, 156, 0.5)"/></svg>'), auto;
+        }
+
+        /* Texture Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Layout Helpers */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        section {
+            padding: 120px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition-soft);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1000;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--ink-black);
+            margin-left: 30px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--dusty-rose);
+        }
+
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            margin-bottom: 10px;
+            line-height: 1;
+            z-index: 2;
+        }
+
+        .hero-sub {
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--muted-sage);
+            z-index: 2;
+        }
+
+        .hero-blob {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(200, 157, 156, 0.2) 0%, rgba(253, 250, 246, 0) 70%);
+            border-radius: 50%;
+            z-index: 1;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translate(-20px, -20px) scale(1); }
+            100% { transform: translate(40px, 20px) scale(1.1); }
+        }
+
+        /* About Section */
+        #about .about-card {
+            background: #fff;
+            padding: 60px;
+            box-shadow: 15px 15px 40px var(--paper-shadow);
+            max-width: 700px;
+            margin-left: auto;
+            position: relative;
+            transform: rotate(1deg);
+        }
+
+        .handwritten {
+            font-family: 'Nothing You Could Do', cursive;
+            color: var(--dusty-rose);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .skills-list {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+
+        .skill-item {
+            border-bottom: 1px solid var(--muted-sage);
+            padding-bottom: 2px;
+        }
+
+        /* Works Section */
+        .filter-nav {
+            margin-bottom: 50px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .filter-btn {
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition-soft);
+        }
+
+        .filter-btn.active {
+            border-bottom: 1px solid var(--ink-black);
+        }
+
+        #projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px;
+            align-items: start;
+        }
+
+        .project-card {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: var(--transition-soft);
+        }
+
+        /* Asymmetric offset */
+        .project-card:nth-child(even) {
+            margin-top: 100px;
+        }
+
+        .project-img-wrapper {
+            overflow: hidden;
+            background: #eee;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .project-img-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 1.2s ease;
+        }
+
+        .project-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .project-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted-sage);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        /* Illustration Gallery */
+        #gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            cursor: zoom-in;
+        }
+
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(20%);
+            transition: var(--transition-soft);
+        }
+
+        .gallery-item:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        /* Lightbox */
+        #lightbox {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(253, 250, 246, 0.98);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 40px;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        /* Contact Section */
+        #contact {
+            text-align: center;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            margin-top: 100px;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .contact-link {
+            text-decoration: none;
+            color: var(--ink-black);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #projects-grid { grid-template-columns: 1fr; gap: 40px; }
+            .project-card:nth-child(even) { margin-top: 0; }
+            #about .about-card { padding: 30px; margin-left: 0; }
+            nav { padding: 20px; font-size: 0.7rem; }
+            .contact-links { flex-direction: column; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">✦</div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#projects">Works</a>
+            <a href="#gallery">Studio</a>
+            <a href="#contact">Connect</a>
+        </div>
+    </nav>
+
+    <section id="hero">
+        <div class="hero-blob"></div>
+        <h1 class="hero-title">Your Name</h1>
+        <p class="hero-sub">designer · storyteller · dreamer</p>
+    </section>
+
+    <section id="about" class="container">
+        <div class="about-card">
+            <span class="handwritten">A little about me...</span>
+            <p>I am a creative explorer wandering through the intersections of digital design and tactile art. My work is a collection of whispers, memories, and visual poems. I believe that design should feel human, slightly imperfect, and deeply personal.</p>
+            <div class="skills-list">
+                <span class="skill-item">Adobe Creative Suite</span>
+                <span class="skill-item">Illustration</span>
+                <span class="skill-item">Brand Storytelling</span>
+                <span class="skill-item)UI/UX Design</span>
+                <span class="skill-item">Art Direction</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="container">
+        <h2 style="font-size: 3rem; margin-bottom: 40px;">Selected Works</h2>
+        
+        <div class="filter-nav" id="filter-nav">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="design">Design</button>
+            <button class="filter-btn" data-filter="illustration">Illustration</button>
+            <button class="filter-btn" data-filter="branding">Branding</button>
+        </div>
+
+        <div id="projects-grid">
+            <!-- Projects injected by JS -->
+        </div>
+    </section>
+
+    <section id="gallery" class="container">
+        <h2 style="font-size: 3rem; margin-bottom: 40px; text-align: right;">The Sketchbook</h2>
+        <div id="gallery-grid">
+            <!-- Gallery images injected by JS -->
+        </div>
+    </section>
+
+    <section id="contact" class="container">
+        <h2 style="font-size: 2.5rem;">Let's wander together.</h2>
+        <p style="margin-top: 10px;">Currently open to magic and collaboration.</p>
+        <div class="contact-links">
+            <a href="mailto:hello@example.com" class="contact-link">email</a>
+            <a href="#" class="contact-link" id="wechat-trigger">wechat</a>
+            <a href="#" class="contact-link">instagram</a>
+            <a href="#" class="contact-link">behance</a>
+        </div>
+        <p style="font-size: 0.7rem; margin-top: 80px; opacity: 0.5;">© 2024 Built with soul.</p>
+    </section>
+
+    <div id="lightbox">
+        <img src="" alt="Full view">
+    </div>
+
+    <script>
+        /**
+         * PROJECT DATA
+         * Add your new projects here easily!
+         */
+        const projectData = [
+            {
+                title: "Solitude in Bloom",
+                description: "A series of editorial posters exploring the quiet beauty of indoor gardens.",
+                image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=800&q=80",
+                link: "https://mp.weixin.qq.com/...", // Link to WeChat Article or Behance
+                tag: "design"
+            },
+            {
+                title: "Morning Whispers",
+                description: "Brand identity for a boutique perfume house focusing on natural scents.",
+                image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80",
+                link: "#",
+                tag: "branding"
+            },
+            {
+                title: "Digital Ephemera",
+                description: "Experimental typography project using scanned textures and ink.",
+                image: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80",
+                link: "#",
+                tag: "illustration"
+            },
+            {
+                title: "Velvet Archive",
+                description: "Web design and layout for a vintage fashion collective.",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+                link: "#",
+                tag: "design"
+            }
+        ];
+
+        const illustrationData = [
+            "https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1576733224921-6d75c60773d2?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=600&q=80"
+        ];
+
+        // --- Core Functionality ---
+
+        function renderProjects(filter = 'all') {
+            const grid = document.getElementById('projects-grid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' 
+                ? projectData 
+                : projectData.filter(p => p.tag === filter);
+
+            filtered.forEach(project => {
+                const card = document.createElement('a');
+                card.href = project.link;
+                card.target = "_blank";
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <div class="project-img-wrapper">
+                        <img src="${project.image}" alt="${project.title}">
+                    </div>
+                    <span class="project-tag">${project.tag}</span>
+                    <h3 class="project-title">${project.title}</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">${project.description}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('gallery-grid');
+            illustrationData.forEach(src => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `<img src="${src}" alt="Artwork">`;
+                div.onclick = () => openLightbox(src);
+                grid.appendChild(div);
+            });
+        }
+
+        // --- Filtering Logic ---
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                renderProjects(e.target.dataset.filter);
+            });
+        });
+
+        // --- Lightbox ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('img');
+        
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.style.display = 'flex';
+        }
+
+        lightbox.onclick = () => lightbox.style.display = 'none';
+
+        // --- Intersection Observer (Fade in on scroll) ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // --- Initialize ---
+        window.onload = () => {
+            renderProjects();
+            renderGallery();
+            document.querySelectorAll('section').forEach(s => observer.observe(s));
+            
+            // Simple WeChat placeholder alert
+            document.getElementById('wechat-trigger').onclick = (e) => {
+                e.preventDefault();
+                alert("WeChat ID: YourIDHere \n(Or replace this with a popup image link!)");
+            };
+        };
+    </script>
+</body>
+</html>
